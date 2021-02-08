@@ -73,18 +73,7 @@ func testGoWithBuilder(builder string) func(*testing.T, spec.G, spec.S) {
 						Execute(image.ID)
 					Expect(err).NotTo(HaveOccurred())
 
-					Eventually(container).Should(BeAvailable())
-
 					Eventually(container).Should(Serve("Powered By Paketo Buildpacks", "8080"))
-					// response, err := http.Get(fmt.Sprintf("http://localhost:%s", container.HostPort("8080")))
-					// Expect(err).NotTo(HaveOccurred())
-					// defer response.Body.Close()
-
-					// Expect(response.StatusCode).To(Equal(http.StatusOK))
-
-					// content, err := ioutil.ReadAll(response.Body)
-					// Expect(err).NotTo(HaveOccurred())
-					// Expect(string(content)).To(ContainSubstring("Powered By Paketo Buildpacks"))
 				})
 			})
 
@@ -101,18 +90,18 @@ func testGoWithBuilder(builder string) func(*testing.T, spec.G, spec.S) {
 						Execute(name, source)
 					Expect(err).ToNot(HaveOccurred(), logs.String)
 
+					Expect(logs).To(ContainLines(ContainSubstring("Paketo Go Distribution Buildpack")))
+					Expect(logs).To(ContainLines(ContainSubstring("Paketo Dep Buildpack")))
+					Expect(logs).To(ContainLines(ContainSubstring("Paketo Dep Ensure Buildpack")))
+					Expect(logs).To(ContainLines(ContainSubstring("Paketo Go Build Buildpack")))
+
 					container, err = docker.Container.Run.
 						WithEnv(map[string]string{"PORT": "8080"}).
 						WithPublish("8080").
 						Execute(image.ID)
 					Expect(err).NotTo(HaveOccurred())
 
-					Eventually(container).Should(BeAvailable())
-
-					Expect(logs).To(ContainLines(ContainSubstring("Paketo Go Distribution Buildpack")))
-					Expect(logs).To(ContainLines(ContainSubstring("Paketo Dep Buildpack")))
-					Expect(logs).To(ContainLines(ContainSubstring("Paketo Dep Ensure Buildpack")))
-					Expect(logs).To(ContainLines(ContainSubstring("Paketo Go Build Buildpack")))
+					Eventually(container).Should(Serve("Powered By Paketo Buildpacks", "8080"))
 				})
 			})
 		})

@@ -65,7 +65,7 @@ Runs the smoke test suite.
 
 OPTIONS
   --help        -h         prints the command usage
-  --builder <name> -b <name>  sets the name of the builder that is built for testing
+  --builder <name> -b <name>  sets the name of the builder that is built for testing. Defaults to Full Builder if nothing passed.
 USAGE
 }
 
